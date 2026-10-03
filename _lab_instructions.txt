@@ -1,0 +1,221 @@
+Bai thuc hanh Lab W04 - He thong tinh luong va thuong nhan su (chep tu lab w04.pdf)
+
+Bài tập: HỆ THỐNG TÍNH LƯƠNG VÀ THƯỞNG NHÂN SỰ 
+1. Nghiệp vụ 
+Một doanh nghiệp cần chương trình tính thu nhập hằng tháng cho ba loại nhân sự: 
+ SalariedEmployee: nhân viên hưởng lương cố định. 
+ HourlyEmployee: nhân viên hưởng lương theo giờ. 
+ SalesEmployee: nhân viên kinh doanh hưởng lương cơ bản và hoa hồng. 
+Mọi nhân sự đều có mã, họ tên, phòng ban và khoản thưởng trong tháng. Mỗi loại nhân sự có công thức tính 
+thu nhập khác nhau. Bộ phận kế toán muốn có nhiều cách ghi nhận thưởng và nhiều cách khởi tạo nhân sự tùy 
+theo mức độ đầy đủ của dữ liệu. 
+A: Phân tích và thiết kế 
+A.1 Xác định các lớp tối thiểu cần có: 
+Thiết kế các lớp: 
+ Employee: lớp cơ sở. 
+ SalariedEmployee: nhân viên lương cố định. 
+ HourlyEmployee: nhân viên theo giờ. 
+ SalesEmployee: nhân viên kinh doanh. 
+ Payroll: lớp xử lý danh sách và tổng hợp bảng lương. 
+Payroll không phải là một loại Employee; do đó không được sử dụng kế thừa giữa hai lớp này. 
+A.2 Lớp Employee 
+Thuộc tính chung 
+ employeeId: mã nhân sự. 
+ fullName: họ tên. 
+ department: phòng ban. 
+ monthlyBonus: tổng thưởng trong tháng. 
+Bất biến – quy tắc 
+ Mã nhân sự không rỗng. 
+ Họ tên không rỗng. 
+ Phòng ban không rỗng. 
+ Thưởng không được âm. 
+A.3. Các lớp dẫn xuất 
+SalariedEmployee 
+Có thêm: 
+ monthlySalary: lương cố định tháng. 
+ responsibilityAllowance: phụ cấp trách nhiệm. 
+Công thức thu nhập trước khấu trừ: 
+grossPay = monthlySalary + responsibilityAllowance + monthlyBonus 
+HourlyEmployee 
+Có thêm: 
+ hourlyRate: đơn giá giờ. 
+ workedHours: số giờ làm trong tháng. 
+Quy tắc: 
+Nếu workedHours <= 160: 
+    basePay = workedHours × hourlyRate 
+Nếu workedHours > 160: 
+    basePay = 160 × hourlyRate 
+              + (workedHours - 160) × hourlyRate × 1.5 
+ 
+grossPay = basePay + monthlyBonus 
+Số giờ làm hợp lệ từ 0 đến 250. 
+SalesEmployee 
+Có thêm: 
+ baseSalary: lương cơ bản. 
+ salesRevenue: doanh số. 
+ commissionRate: tỷ lệ hoa hồng. 
+Công thức: 
+grossPay = baseSalary 
+           + salesRevenue × commissionRate 
+           + monthlyBonus 
+Tỷ lệ hoa hồng nằm trong khoảng từ 0 đến 0,3. 
+A.4. Nạp chồng constructor 
+Employee có ít nhất hai constructor: 
+Employee(employeeId, fullName) 
+Employee(employeeId, fullName, department) 
+Giá trị mặc định: 
+department = "Unassigned" 
+monthlyBonus = 0 
+Mỗi lớp dẫn xuất phải có tối thiểu hai constructor: 
+ Constructor rút gọn, dùng giá trị mặc định hợp lý. 
+ Constructor đầy đủ, nhận toàn bộ dữ liệu cần thiết. 
+Sinh viên phải tránh lặp lại logic kiểm tra bằng constructor ủy quyền hoặc phương pháp tái sử dụng 
+phù hợp với ngôn ngữ. 
+A.5. Nạp chồng phương thức thưởng 
+Trong lớp Employee, thiết kế ba phiên bản addBonus(): 
+addBonus(amount) 
+addBonus(amount, reason) 
+addBonus(rate, referenceAmount, reason) 
+Ý nghĩa: 
+1. Thêm một khoản thưởng cố định. 
+2. Thêm khoản thưởng cố định kèm lý do. 
+3. Tính thưởng theo tỷ lệ của một giá trị tham chiếu, kèm lý do. 
+Quy tắc: 
+ amount phải lớn hơn 0. 
+ rate nằm trong khoảng lớn hơn 0 và không quá 0,5. 
+ referenceAmount phải lớn hơn 0. 
+ Nếu có reason, nội dung không được rỗng. 
+ Mọi khoản thưởng hợp lệ được cộng vào monthlyBonus. 
+Sinh viên tự quyết định có cần lưu lịch sử thưởng hay chỉ lưu tổng thưởng. Quyết định phải được giải 
+thích. Nếu lưu lịch sử, cần thiết kế thêm lớp hoặc cấu trúc phù hợp, không dùng nhiều mảng song 
+song. 
+A.6. Ghi đè phương thức tính lương 
+Lớp Employee khai báo các hành vi chung: 
+ calculateGrossPay(). 
+ getEmployeeType(). 
+ displayPayrollInfo(). 
+Các lớp dẫn xuất ghi đè theo công thức riêng. 
+A.7. Lớp Payroll 
+Payroll quản lý danh sách các nhân sự cho một kỳ lương. 
+Thuộc tính 
+ period: kỳ lương, ví dụ 2026-09. 
+ Danh sách nhân sự. 
+Phương thức 
+ addEmployee(employee). 
+ findEmployee(employeeId). 
+ calculateTotalPayroll(). 
+ calculatePayrollByDepartment(department) . 
+ findHighestPaidEmployee(). 
+ displayPayroll(). 
+Ràng buộc: 
+ Không có hai nhân sự cùng mã trong một bảng lương. 
+ Các phép tổng hợp phải gọi calculateGrossPay() qua kiểu chung Employee. 
+ Không dùng chuỗi if/else theo loại nhân sự để tính lương. 
+A.8. Thiết kế nâng cao 
+Xây dựng phương án và giải thích: 
+1. Vì sao calculateGrossPay() phù hợp cho ghi đè, không phải nạp chồng? 
+2. Vì sao addBonus() phù hợp cho nạp chồng? 
+3. Payroll nên lưu đối tượng, tham chiếu hay con trỏ như thế nào để tránh mất hành vi lớp dẫn 
+xuất? 
+4. Lớp cơ sở Employee nên là lớp cụ thể hay lớp trừu tượng? Giải thích lựa chọn. 
+5. Nếu nhân viên kinh doanh cũng được trả theo giờ, kế thừa đơn có còn phù hợp không? 
+6. Có nên đặt calculateTotalPayroll() là thành viên static không? Vì sao? 
+A.9. Sơ đồ lớp 
+Sinh viên hoàn thiện sơ đồ lớp. Khung quan hệ giữa các lớp: 
+ Employee 
+ SalariedEmployee 
+ HourlyEmployee 
+ SalesEmployee 
+ Payroll 
+Sơ đồ hoàn chỉnh phải thể hiện: 
+ Phạm vi truy cập. 
+ Thuộc tính của từng lớp. 
+ Constructor nạp chồng. 
+ Phương thức addBonus() nạp chồng. 
+ Phương thức được ghi đè. 
+ Bội số của quan hệ giữa Payroll và Employee. 
+B: Cài đặt 
+B.1. Lớp Employee 
+ Đóng gói thuộc tính. 
+ Cài đặt constructor nạp chồng. 
+ Cài đặt ba phiên bản addBonus(). 
+ Cung cấp phương thức đặt lại thưởng khi bắt đầu kỳ lương mới nếu thiết kế yêu cầu. 
+ Khai báo các phương thức cần ghi đè theo đúng cú pháp ngôn ngữ. 
+B.2. Lớp SalariedEmployee 
+ Cài đặt hai constructor. 
+ Kiểm tra lương và phụ cấp không âm. 
+ Ghi đè công thức tính thu nhập. 
+ Hiển thị đầy đủ các thành phần thu nhập. 
+B.3. Lớp HourlyEmployee 
+ Cài đặt hai constructor. 
+ Kiểm tra đơn giá giờ và số giờ làm. 
+ Tính giờ thường và giờ vượt ngưỡng 160. 
+ Ghi đè công thức tính thu nhập. 
+ Không lưu riêng tiền làm thêm nếu có thể tính từ trạng thái hiện có. 
+B.4. Lớp SalesEmployee 
+ Cài đặt hai constructor. 
+ Kiểm tra doanh số và tỷ lệ hoa hồng. 
+ Ghi đè công thức tính thu nhập. 
+ Cho phép cập nhật doanh số bằng phương thức có kiểm soát. 
+B.5. Lớp Payroll 
+ Không thêm nhân sự trùng mã. 
+ Hiển thị bảng lương bằng lời gọi đa hình. 
+ Tính tổng bảng lương. 
+ Tính tổng theo phòng ban. 
+ Tìm người có thu nhập cao nhất. 
+ Xử lý hợp lý trường hợp danh sách rỗng. 
+C: Dữ liệu kiểm thử  
+Tạo ít nhất các đối tượng sau: 
+Nhân viên lương cố định 
+Mã: E001 
+Họ tên: Nguyễn Minh An 
+Phòng: Đào tạo 
+Lương tháng: 15.000.000 
+Phụ cấp: 2.000.000 
+Thưởng cố định: 1.000.000 
+Thu nhập mong đợi: 18.000.000 
+Nhân viên theo giờ, không có giờ vượt ngưỡng 
+Mã: E002 
+Họ tên: Trần Thu Bình 
+Phòng: Hỗ trợ 
+Đơn giá giờ: 100.000 
+Số giờ: 150 
+Thưởng: 500.000 
+Thu nhập mong đợi: 15.500.000 
+Nhân viên theo giờ, có giờ vượt ngưỡng 
+Mã: E003 
+Họ tên: Lê Hoàng Chi 
+Phòng: Hỗ trợ 
+Đơn giá giờ: 100.000 
+Số giờ: 170 
+Không có thưởng 
+Thu nhập mong đợi: 17.500.000 
+Giải thích: 
+160 × 100.000 + 10 × 100.000 × 1,5 = 17.500.000 
+Nhân viên kinh doanh 
+Mã: E004 
+Họ tên: Phạm Quốc Dũng 
+Phòng: Kinh doanh 
+Lương cơ bản: 8.000.000 
+Doanh số: 200.000.000 
+Hoa hồng: 5% 
+Thưởng theo tỷ lệ: 2% của 50.000.000 
+Thu nhập mong đợi: 19.000.000 
+Giải thích: 
+8.000.000 + 200.000.000 × 5% + 50.000.000 × 2% 
+= 19.000.000 
+Tổng bảng lương mong đợi 
+18.000.000 + 15.500.000 + 17.500.000 + 19.000.000 
+= 70.000.000 
+Tổng của phòng Hỗ trợ 
+15.500.000 + 17.500.000 = 33.000.000 
+C.1. Kiểm thử biên và kiểm thử lỗi 
+Ít nhất 10 tình huống kiểm thử 
+ 
+Yêu cầu giải thích 
+Phiên bản addBonus() nào được chọn trong từng lời gọi và vì sao? 
+Việc lựa chọn phương thức nạp chồng diễn ra ở thời điểm biên dịch hay chạy? 
+Việc lựa chọn calculateGrossPay() của lớp dẫn xuất diễn ra như thế nào? 
+Nếu thay danh sách kiểu Employee bằng nhiều danh sách riêng cho từng loại, thiết kế thay đổi ra sao? 
+Khi thêm loại ContractEmployee, phần mã nào phải sửa và phần nào không nên phải sửa? 
+ 

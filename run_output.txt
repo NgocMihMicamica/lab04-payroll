@@ -1,0 +1,215 @@
+==============================================================
+ LAB 04 - KẾ THỪA (INHERITANCE)
+ Mã sinh viên: 202418947 - Họ tên: Đặng Ngọc Minh
+ Chủ đề: Hệ thống tính lương và thưởng nhân sự
+==============================================================
+
+[1] DỮ LIỆU KIỂM THỬ THEO MỤC C
+  Thêm nhân sự vào bảng lương kỳ 2026-09:
+  [ĐÚNG] C1. Thêm E001 (lương cố định) vào bảng lương
+        Mong đợi: True
+        Quan sát: True
+  [ĐÚNG] C2. Thêm E002 (theo giờ) vào bảng lương
+        Mong đợi: True
+        Quan sát: True
+  [ĐÚNG] C3. Thêm E003 (theo giờ, có giờ vượt ngưỡng) vào bảng lương
+        Mong đợi: True
+        Quan sát: True
+  [ĐÚNG] C4. Thêm E004 (kinh doanh) vào bảng lương
+        Mong đợi: True
+        Quan sát: True
+
+  Thu nhập từng nhân sự (gọi CalculateGrossPay() qua kiểu Employee):
+  [ĐÚNG] C5. E001 = lương cố định 15.000.000 + phụ cấp 2.000.000 + thưởng 1.000.000
+        Mong đợi: 18.000.000 VND
+        Quan sát: 18.000.000 VND
+  [ĐÚNG] C6. E002 = 150 giờ × 100.000 + thưởng 500.000
+        Mong đợi: 15.500.000 VND
+        Quan sát: 15.500.000 VND
+  [ĐÚNG] C7. E003 = 160 giờ × 100.000 + 10 giờ × 100.000 × 1,5
+        Mong đợi: 17.500.000 VND
+        Quan sát: 17.500.000 VND
+  [ĐÚNG] C8. E004 = 8.000.000 + 200.000.000 × 5% + 50.000.000 × 2%
+        Mong đợi: 19.000.000 VND
+        Quan sát: 19.000.000 VND
+
+  Tổng hợp bảng lương:
+  [ĐÚNG] C9. Tổng bảng lương kỳ 2026-09
+        Mong đợi: 70.000.000 VND
+        Quan sát: 70.000.000 VND
+  [ĐÚNG] C10. Tổng của phòng "Hỗ trợ"
+        Mong đợi: 33.000.000 VND
+        Quan sát: 33.000.000 VND
+  [ĐÚNG] C11. Tổng của phòng không có nhân sự ("Kế toán")
+        Mong đợi: 0 VND
+        Quan sát: 0 VND
+  [ĐÚNG] C12. Người có thu nhập cao nhất là E004 (19.000.000)
+        Mong đợi: E004 - 19.000.000 VND
+        Quan sát: E004 - 19.000.000 VND
+  [ĐÚNG] C13. Thêm lại E001 (trùng mã) phải bị từ chối
+        Mong đợi: False
+        Quan sát: False
+
+  Bảng lương in bằng lời gọi đa hình DisplayPayrollInfo():
+=== BẢNG LƯƠNG KỲ 2026-09 ===
+   Thành phần: lương tháng 15.000.000 + phụ cấp trách nhiệm 2.000.000 + thưởng 1.000.000
+[Nhân viên lương cố định] E001 - Nguyễn Minh An | Phòng: Đào tạo | Thưởng: 1.000.000 VND | Thu nhập: 18.000.000 VND
+   Thành phần: 150 giờ thường × 100.000 + 0 giờ vượt ngưỡng × 100.000 × 1,5 = 15.000.000 + thưởng 500.000
+[Nhân viên theo giờ] E002 - Trần Thu Bình | Phòng: Hỗ trợ | Thưởng: 500.000 VND | Thu nhập: 15.500.000 VND
+   Thành phần: 160 giờ thường × 100.000 + 10 giờ vượt ngưỡng × 100.000 × 1,5 = 17.500.000 + thưởng 0
+[Nhân viên theo giờ] E003 - Lê Hoàng Chi | Phòng: Hỗ trợ | Thưởng: 0 VND | Thu nhập: 17.500.000 VND
+   Thành phần: lương cơ bản 8.000.000 + hoa hồng 5% × doanh số 200.000.000 = 10.000.000 + thưởng 1.000.000
+[Nhân viên kinh doanh] E004 - Phạm Quốc Dũng | Phòng: Kinh doanh | Thưởng: 1.000.000 VND | Thu nhập: 19.000.000 VND
+Tổng bảng lương: 70.000.000 VND
+
+[2] LỊCH SỬ THƯỞNG (quyết định thiết kế: lưu lịch sử thay vì chỉ lưu tổng)
+   E001 - khoản 1: 1.000.000 VND (Thưởng cố định)
+   E001 - tổng thưởng: 1.000.000 VND
+   E004 - khoản 1: 2% × 50.000.000 = 1.000.000 VND (Thưởng theo tỷ lệ doanh số)
+   E004 - tổng thưởng: 1.000.000 VND
+  [ĐÚNG] C14. Trước khi đặt lại thưởng, tổng thưởng của E004
+        Mong đợi: 1.000.000 VND
+        Quan sát: 1.000.000 VND
+  [ĐÚNG] C15. Sau ResetBonus(), tổng thưởng của E004 về 0
+        Mong đợi: 0 VND
+        Quan sát: 0 VND
+  [ĐÚNG] C16. Thu nhập của E004 sau khi đặt lại thưởng chỉ còn lương và hoa hồng
+        Mong đợi: 18.000.000 VND
+        Quan sát: 18.000.000 VND
+
+[3] TÌNH HUỐNG BIÊN VÀ KIỂM THỬ LỖI
+  [ĐÚNG] B1. Đúng ngưỡng 160 giờ nên không phát sinh giờ vượt ngưỡng
+        Mong đợi: 16.000.000 VND
+        Quan sát: 16.000.000 VND
+  [ĐÚNG] B2. Không có giờ làm nào: thu nhập bằng 0
+        Mong đợi: 0 VND
+        Quan sát: 0 VND
+  [ĐÚNG] B3. Biên trên 250 giờ: 160 giờ thường + 90 giờ vượt ngưỡng
+        Mong đợi: 29.500.000 VND
+        Quan sát: 29.500.000 VND
+  [ĐÚNG] B4. 251 giờ: vượt biên trên
+        Mong đợi: Ném ngoại lệ chứa "Số giờ làm"
+        Quan sát: Ngoại lệ: Số giờ làm phải trong khoảng 0 đến 250 giờ.
+  [ĐÚNG] B5. -1 giờ: số giờ làm âm
+        Mong đợi: Ném ngoại lệ chứa "Số giờ làm"
+        Quan sát: Ngoại lệ: Số giờ làm phải trong khoảng 0 đến 250 giờ.
+  [ĐÚNG] B6. Đơn giá giờ âm
+        Mong đợi: Ném ngoại lệ chứa "Đơn giá giờ"
+        Quan sát: Ngoại lệ: Đơn giá giờ không được âm.
+  [ĐÚNG] B7. Cập nhật số giờ 300 qua phương thức có kiểm soát
+        Mong đợi: Ném ngoại lệ chứa "Số giờ làm"
+        Quan sát: Ngoại lệ: Số giờ làm phải trong khoảng 0 đến 250 giờ.
+  [ĐÚNG] B8. Cập nhật số giờ 250 (biên trên) được chấp nhận
+        Mong đợi: 250
+        Quan sát: 250
+  [ĐÚNG] B9. Biên trên tỷ lệ hoa hồng 30%: 5.000.000 + 100.000.000 × 30%
+        Mong đợi: 35.000.000 VND
+        Quan sát: 35.000.000 VND
+  [ĐÚNG] B10. Tỷ lệ hoa hồng 31%: vượt biên trên
+        Mong đợi: Ném ngoại lệ chứa "Tỷ lệ hoa hồng"
+        Quan sát: Ngoại lệ: Tỷ lệ hoa hồng phải trong khoảng 0 đến 0,3.
+  [ĐÚNG] B11. Tỷ lệ hoa hồng âm
+        Mong đợi: Ném ngoại lệ chứa "Tỷ lệ hoa hồng"
+        Quan sát: Ngoại lệ: Tỷ lệ hoa hồng phải trong khoảng 0 đến 0,3.
+  [ĐÚNG] B12. Lương cơ bản âm
+        Mong đợi: Ném ngoại lệ chứa "Lương cơ bản"
+        Quan sát: Ngoại lệ: Lương cơ bản không được âm.
+  [ĐÚNG] B13. Cập nhật doanh số âm
+        Mong đợi: Ném ngoại lệ chứa "Doanh số"
+        Quan sát: Ngoại lệ: Doanh số không được âm.
+  [ĐÚNG] B14. Lương tháng âm của nhân viên lương cố định
+        Mong đợi: Ném ngoại lệ chứa "Lương tháng"
+        Quan sát: Ngoại lệ: Lương tháng không được âm.
+  [ĐÚNG] B15. Phụ cấp trách nhiệm âm
+        Mong đợi: Ném ngoại lệ chứa "Phụ cấp trách nhiệm"
+        Quan sát: Ngoại lệ: Phụ cấp trách nhiệm không được âm.
+  [ĐÚNG] B16. Tỷ lệ thưởng đúng biên trên 0,5: 0,5 × 10.000.000
+        Mong đợi: 5.000.000 VND
+        Quan sát: 5.000.000 VND
+  [ĐÚNG] B17. Tỷ lệ thưởng 0,51: vượt biên trên
+        Mong đợi: Ném ngoại lệ chứa "Tỷ lệ thưởng"
+        Quan sát: Ngoại lệ: Tỷ lệ thưởng phải lớn hơn 0 và không quá 0,5.
+  [ĐÚNG] B18. Tỷ lệ thưởng âm
+        Mong đợi: Ném ngoại lệ chứa "Tỷ lệ thưởng"
+        Quan sát: Ngoại lệ: Tỷ lệ thưởng phải lớn hơn 0 và không quá 0,5.
+  [ĐÚNG] B19. Giá trị tham chiếu bằng 0
+        Mong đợi: Ném ngoại lệ chứa "Giá trị tham chiếu"
+        Quan sát: Ngoại lệ: Giá trị tham chiếu phải lớn hơn 0.
+  [ĐÚNG] B20. Số tiền thưởng bằng 0
+        Mong đợi: Ném ngoại lệ chứa "Số tiền thưởng"
+        Quan sát: Ngoại lệ: Số tiền thưởng phải lớn hơn 0.
+  [ĐÚNG] B21. Số tiền thưởng âm
+        Mong đợi: Ném ngoại lệ chứa "Số tiền thưởng"
+        Quan sát: Ngoại lệ: Số tiền thưởng phải lớn hơn 0.
+  [ĐÚNG] B22. Lý do thưởng chỉ có khoảng trắng
+        Mong đợi: Ném ngoại lệ chứa "Lý do thưởng"
+        Quan sát: Ngoại lệ: Lý do thưởng không được rỗng.
+  [ĐÚNG] B23. Tổng thưởng chỉ tăng nhờ khoản thưởng hợp lệ
+        Mong đợi: 5.500.000 VND
+        Quan sát: 5.500.000 VND
+  [ĐÚNG] B24. Mã nhân sự rỗng
+        Mong đợi: Ném ngoại lệ chứa "Mã nhân sự"
+        Quan sát: Ngoại lệ: Mã nhân sự không được rỗng.
+  [ĐÚNG] B25. Họ tên rỗng
+        Mong đợi: Ném ngoại lệ chứa "Họ tên"
+        Quan sát: Ngoại lệ: Họ tên không được rỗng.
+  [ĐÚNG] B26. Phòng ban rỗng
+        Mong đợi: Ném ngoại lệ chứa "Phòng ban"
+        Quan sát: Ngoại lệ: Phòng ban không được rỗng.
+  [ĐÚNG] B27. Kỳ lương sai định dạng (2026-9)
+        Mong đợi: Ném ngoại lệ chứa "yyyy-MM"
+        Quan sát: Ngoại lệ: Kỳ lương phải có dạng yyyy-MM, ví dụ 2026-09.
+  [ĐÚNG] B28. Kỳ lương có tháng 13
+        Mong đợi: Ném ngoại lệ chứa "yyyy-MM"
+        Quan sát: Ngoại lệ: Kỳ lương phải có dạng yyyy-MM, ví dụ 2026-09.
+  [ĐÚNG] B29. Kỳ lương rỗng
+        Mong đợi: Ném ngoại lệ chứa "Kỳ lương"
+        Quan sát: Ngoại lệ: Kỳ lương không được rỗng.
+  [ĐÚNG] B30. Bảng lương rỗng: tổng bằng 0
+        Mong đợi: 0 VND
+        Quan sát: 0 VND
+  [ĐÚNG] B31. Bảng lương rỗng: không có ai là người thu nhập cao nhất
+        Mong đợi: null
+        Quan sát: null
+  [ĐÚNG] B32. Tìm nhân sự không tồn tại trả về null
+        Mong đợi: null
+        Quan sát: null
+  [ĐÚNG] B33. Thêm null vào bảng lương bị từ chối
+        Mong đợi: Ném ngoại lệ chứa "null"
+        Quan sát: Ngoại lệ: Nhân sự không được null. (Parameter 'employee')
+  [ĐÚNG] B34. Tổng theo phòng ban không phân biệt chữ hoa/thường ("hỗ TRỢ")
+        Mong đợi: 10.000.000 VND
+        Quan sát: 10.000.000 VND
+  [ĐÚNG] B35. Tên phòng ban cần tính tổng bị rỗng
+        Mong đợi: Ném ngoại lệ chứa "Phòng ban"
+        Quan sát: Ngoại lệ: Phòng ban cần tính tổng không được rỗng.
+  [ĐÚNG] B36. SalariedEmployee rút gọn: phòng mặc định Unassigned, phụ cấp 0, thưởng 0
+        Mong đợi: Unassigned / 0 / 0
+        Quan sát: Unassigned / 0 / 0
+  [ĐÚNG] B37. HourlyEmployee rút gọn: số giờ làm mặc định bằng 0
+        Mong đợi: 0
+        Quan sát: 0
+  [ĐÚNG] B38. SalesEmployee rút gọn: chưa có doanh số nên thu nhập bằng lương cơ bản
+        Mong đợi: 7.000.000 VND
+        Quan sát: 7.000.000 VND
+
+[4] GIẢI THÍCH LỰA CHỌN PHƯƠNG THỨC
+  a) AddBonus(1.000.000)                 → nạp chồng 1: AddBonus(double amount)
+  b) AddBonus(500.000, "...")           → nạp chồng 2: AddBonus(double, string)
+  c) AddBonus(0,02, 50.000.000, "...")  → nạp chồng 3: AddBonus(double, double, string)
+  Việc chọn phiên bản AddBonus() diễn ra ở THỜI ĐIỂM BIÊN DỊCH: trình biên dịch đối
+  chiếu số lượng và kiểu của đối số với danh sách tham số của từng phiên bản.
+  Việc chọn CalculateGrossPay() diễn ra ở THỜI ĐIỂM CHẠY (đa hình động): biến tham
+  chiếu khai báo kiểu Employee nhưng phương thức được gọi là phiên bản ghi đè của
+  lớp thực tế (SalariedEmployee / HourlyEmployee / SalesEmployee).
+  Nhờ vậy Payroll không cần chuỗi if/else theo loại nhân sự khi tính lương.
+  Employee là lớp trừu tượng nên không thể viết new Employee(...) trực tiếp.
+
+[5] TỔNG KẾT KIỂM THỬ
+  Số tình huống ĐÚNG: 54
+  Số tình huống SAI : 0
+  Tổng số tình huống: 54
+
+  => Tất cả tình huống kiểm thử đều cho kết quả đúng như mong đợi.
+
+KẾT THÚC CHƯƠNG TRÌNH.
